@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Blurdle
 {
@@ -41,7 +42,8 @@ namespace Blurdle
         {
             int round_counter = 1;
             int[] letter_usage = new int[26]; // 0 = not used yet, 1 = not in word, 2 = in word, wrong position, 3 = in word, right position
-            string[] words = Properties.Resources.words_5_letters.Split(Environment.NewLine);
+            string[] words = Properties.Resources.words_5_letters.Split(Environment.NewLine); // faster access O(1)
+            HashSet<string> words_set = new HashSet<string>(words); // faster lookup O(1)
             string word, guess;
 
             Random rnd = new Random();
@@ -68,6 +70,10 @@ namespace Blurdle
                     else if (guess.Length != 5)
                     {
                         Console.WriteLine("Your guess is not 5 letters long. Try again.");
+                    }
+                    else if (!words_set.Contains(guess)) 
+                    {
+                        Console.WriteLine("Your guess was not found in the word database.");
                     }
                     else if (!String.Equals(guess, word))
                     {
